@@ -474,8 +474,7 @@ def get_app_flags(default_env, app_config, default_config):
     project_env_flags = _get_env_flags(app_config)
 
     return {
-        key: project_env_flags.get(key)
-        or default_env_flags.get(key)
+        key: project_env_flags.get(key) or default_env_flags.get(key)
         for key in TRACKED_SCOPES
     }
 
@@ -848,7 +847,9 @@ def compile_source_files(
     # symlinks in components_dir in order for the .startswith() to work as
     # expected below.
     components_dir = str(
-        Path(fs.to_unix_path(os.path.join(FRAMEWORK_DIR, "components"))).resolve()
+        Path(
+            fs.to_unix_path(os.path.join(FRAMEWORK_DIR, "components"))
+        ).resolve()
     )
     for source in config.get("sources", []):
         if source["path"].endswith(".rule"):
@@ -866,7 +867,11 @@ def compile_source_files(
                 src_path = os.path.join(project_src_dir, src_path)
 
             obj_path = os.path.join("$BUILD_DIR", prepend_dir or "")
-            if str(Path(src_path).resolve()).lower().startswith(components_dir.lower()):
+            if (
+                str(Path(src_path).resolve())
+                .lower()
+                .startswith(components_dir.lower())
+            ):
                 obj_path = os.path.join(
                     obj_path, os.path.relpath(src_path, components_dir)
                 )
